@@ -1,6 +1,7 @@
 package com.scaler.productservice.controller;
 
 import com.scaler.productservice.dto.CreateProductRequestDto;
+import com.scaler.productservice.exception.ProductNotFoundException;
 import com.scaler.productservice.model.Product;
 import com.scaler.productservice.service.FakeStoreProductService;
 import java.util.List;
@@ -23,13 +24,17 @@ public class ProductController {
   }
 
   @GetMapping("/products/{id}")
-  public Product getProductById(@PathVariable("id") Integer id) {
-    // validations
-    if (id == null) {
-      throw new IllegalArgumentException("Id cannot be null");
+  public Product getProductById(@PathVariable("id") Integer id) throws ProductNotFoundException {
+    if (id == 10000) {
+      throw new IllegalArgumentException("Id should not be 10000");
     }
 
-    return service.getProductById(id);
+    Product product = service.getProductById(id);
+    if (product == null) {
+      throw new ProductNotFoundException("Product not found");
+    }
+
+    return product;
   }
 
   @PostMapping("/products")
@@ -49,6 +54,8 @@ public class ProductController {
   @GetMapping("/products")
   public ResponseEntity<List<Product>> getAllProducts() {
     List<Product> products = service.getAllProducts();
+    //throw new RuntimeException();
+
     return ResponseEntity.ok(products); // HttpStatus code is 200.
   }
 
