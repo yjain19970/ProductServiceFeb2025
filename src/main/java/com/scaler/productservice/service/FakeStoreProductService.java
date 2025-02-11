@@ -3,6 +3,8 @@ package com.scaler.productservice.service;
 import com.scaler.productservice.dto.FakeStoreResponseDTO;
 import com.scaler.productservice.model.Category;
 import com.scaler.productservice.model.Product;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -46,6 +48,38 @@ public class FakeStoreProductService {
     product.setTitle(response.getTitle());
 
     return product;
+  }
+
+  public List<Product> getAllProducts() {
+    List<Product> response = new ArrayList<>();
+    ResponseEntity<FakeStoreResponseDTO[]> fakeStoreProducts =
+        restTemplate.getForEntity("https://fakestoreapi.com/products", FakeStoreResponseDTO[].class);
+
+    System.out.println("Status code: " + fakeStoreProducts.getStatusCode());
+    // next step:
+    for (FakeStoreResponseDTO fakeStoreDTO : fakeStoreProducts.getBody()) {
+      response.add(convertFakeStoreResponseToProduct(fakeStoreDTO));
+    }
+
+    return response;
+  }
+
+  public Product createProduct(String title, String imageURL, String catTitle, String description) {
+    Product response;
+
+    FakeStoreResponseDTO requestBody = new FakeStoreResponseDTO();
+    requestBody.setCategory(catTitle);
+    requestBody.setDescription(description);
+    requestBody.setTitle(title);
+    requestBody.setImage(imageURL);
+
+    ResponseEntity<FakeStoreResponseDTO> fakeStoreResponse =
+        restTemplate.postForEntity("https://fakestoreapi.com/products", requestBody, FakeStoreResponseDTO.class);
+
+    System.out.println("Status code: " + fakeStoreResponse.getStatusCode());
+
+    response = convertFakeStoreResponseToProduct(fakeStoreResponse.getBody());
+    return response;
   }
 }
 

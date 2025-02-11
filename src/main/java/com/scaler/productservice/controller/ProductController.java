@@ -1,12 +1,16 @@
 package com.scaler.productservice.controller;
 
+import com.scaler.productservice.dto.CreateProductRequestDto;
 import com.scaler.productservice.model.Product;
 import com.scaler.productservice.service.FakeStoreProductService;
+import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -29,13 +33,23 @@ public class ProductController {
   }
 
   @PostMapping("/products")
-  public void createProduct() {
+  public Product createProduct(@RequestBody CreateProductRequestDto request) {
+    // you can do validations
+    if (request.getDescription() == null) {
+      throw new IllegalArgumentException("Description cannot be null");
+    }
+    if (request.getTitle() == null) {
+      throw new IllegalArgumentException("Title cannot be null");
+    }
 
+    return service.createProduct(request.getTitle(), request.getImageURL(), request.getCategory().getTitle(),
+        request.getDescription());
   }
 
   @GetMapping("/products")
-  public void getAllProducts() {
-
+  public ResponseEntity<List<Product>> getAllProducts() {
+    List<Product> products = service.getAllProducts();
+    return ResponseEntity.ok(products); // HttpStatus code is 200.
   }
 
   @PutMapping("/products/{id}")

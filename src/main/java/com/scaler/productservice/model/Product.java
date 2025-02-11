@@ -1,9 +1,5 @@
 package com.scaler.productservice.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
-
 public class Product {
   private Integer id;
   private String title;
