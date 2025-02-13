@@ -1,20 +1,11 @@
 package com.scaler.productservice.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.Entity;
 
 
-public class Category {
-  private Integer id;
+@Entity
+public class Category extends BaseModel {
   private String title;
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
 
   public String getTitle() {
     return title;

@@ -4,6 +4,7 @@ import com.scaler.productservice.dto.CreateProductRequestDto;
 import com.scaler.productservice.exception.ProductNotFoundException;
 import com.scaler.productservice.model.Product;
 import com.scaler.productservice.service.FakeStoreProductService;
+import com.scaler.productservice.service.SelfProductService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ProductController {
   private FakeStoreProductService service;
+  private SelfProductService _selfProductService;
 
   public ProductController(FakeStoreProductService inputService) {
     this.service = inputService;

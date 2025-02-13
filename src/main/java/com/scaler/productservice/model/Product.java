@@ -1,19 +1,19 @@
 package com.scaler.productservice.model;
 
-public class Product {
-  private Integer id;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+
+
+@Entity
+public class Product extends BaseModel {
   private String title;
   private String description;
   private String imageURL;
+
+  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private Category category;
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
 
   public String getTitle() {
     return title;

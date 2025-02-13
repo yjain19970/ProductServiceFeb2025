@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 
 @Service
-public class FakeStoreProductService {
+public class FakeStoreProductService implements com.scaler.productservice.service.Service {
   private RestTemplate restTemplate;
 
   public FakeStoreProductService(RestTemplate restTemplate) {
@@ -80,6 +80,11 @@ public class FakeStoreProductService {
 
     response = convertFakeStoreResponseToProduct(fakeStoreResponse.getBody());
     return response;
+  }
+
+  @Override
+  public Product getProductById(int id) {
+    return null;
   }
 }
 
