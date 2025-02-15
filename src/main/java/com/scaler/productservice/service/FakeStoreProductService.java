@@ -10,14 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 
-@Service
-public class FakeStoreProductService implements com.scaler.productservice.service.Service {
+@Service("fakeStoreProductService")
+public class FakeStoreProductService implements ProductService {
   private RestTemplate restTemplate;
 
   public FakeStoreProductService(RestTemplate restTemplate) {
     this.restTemplate = restTemplate;
   }
 
+  @Override
   public Product getProductById(Integer id) {
     Product product = new Product();
 
@@ -50,6 +51,7 @@ public class FakeStoreProductService implements com.scaler.productservice.servic
     return product;
   }
 
+  @Override
   public List<Product> getAllProducts() {
     List<Product> response = new ArrayList<>();
     ResponseEntity<FakeStoreResponseDTO[]> fakeStoreProducts =
@@ -64,6 +66,7 @@ public class FakeStoreProductService implements com.scaler.productservice.servic
     return response;
   }
 
+  @Override
   public Product createProduct(String title, String imageURL, String catTitle, String description) {
     Product response;
 
@@ -80,11 +83,6 @@ public class FakeStoreProductService implements com.scaler.productservice.servic
 
     response = convertFakeStoreResponseToProduct(fakeStoreResponse.getBody());
     return response;
-  }
-
-  @Override
-  public Product getProductById(int id) {
-    return null;
   }
 }
 

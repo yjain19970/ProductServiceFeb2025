@@ -3,9 +3,9 @@ package com.scaler.productservice.controller;
 import com.scaler.productservice.dto.CreateProductRequestDto;
 import com.scaler.productservice.exception.ProductNotFoundException;
 import com.scaler.productservice.model.Product;
-import com.scaler.productservice.service.FakeStoreProductService;
-import com.scaler.productservice.service.SelfProductService;
+import com.scaler.productservice.service.ProductService;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ProductController {
-  private FakeStoreProductService service;
-  private SelfProductService _selfProductService;
 
-  public ProductController(FakeStoreProductService inputService) {
+  private ProductService service;
+
+  public ProductController(@Qualifier("selfProductService") ProductService inputService) {
     this.service = inputService;
   }
 
@@ -31,7 +31,7 @@ public class ProductController {
       throw new IllegalArgumentException("Id should not be 10000");
     }
 
-    Product product = service.getProductById(id);
+    Product product = service.getProductById(id); // service = new SelfProductService()
     if (product == null) {
       throw new ProductNotFoundException("Product not found");
     }
