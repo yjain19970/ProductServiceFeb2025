@@ -4,7 +4,6 @@ import com.scaler.productservice.model.Category;
 import com.scaler.productservice.model.Product;
 import com.scaler.productservice.repository.CategoryRepo;
 import com.scaler.productservice.repository.ProductRepo;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,7 @@ public class SelfProductService implements ProductService {
 
   @Override
   public List<Product> getAllProducts() {
-    return Collections.emptyList();
+    return productRepo.findAll();
   }
 
   @Override
