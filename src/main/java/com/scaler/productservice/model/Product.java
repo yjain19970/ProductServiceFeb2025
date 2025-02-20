@@ -1,5 +1,6 @@
 package com.scaler.productservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -12,6 +13,7 @@ public class Product extends BaseModel {
   private String imageURL;
 
   @ManyToOne(cascade = CascadeType.ALL)
+  @JsonIgnore
   private Category category;
 
   public String getTitle() {

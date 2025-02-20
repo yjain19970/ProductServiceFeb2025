@@ -4,8 +4,10 @@ import com.scaler.productservice.model.Category;
 import com.scaler.productservice.model.Product;
 import com.scaler.productservice.repository.CategoryRepo;
 import com.scaler.productservice.repository.ProductRepo;
+import com.scaler.productservice.repository.projection.ProductProjection;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 
@@ -22,13 +24,18 @@ public class SelfProductService implements ProductService {
 
   @Override
   public Product getProductById(Integer id) {
-    Product response = productRepo.findById(id).get();
+    Optional<Product> response = productRepo.findById(id);
+    if (!response.isPresent()) {
+      throw new IllegalArgumentException("Product not found");
+    }
     System.out.println("Fetched product : " + response);
-    return response;
+    return response.get();
   }
 
   @Override
   public List<Product> getAllProducts() {
+    ProductProjection response = productRepo.getProductNameByTitle("phone samsung");
+    System.out.println("Fetched product : " + response.getDescription() + " " + response.getTitle());
     return productRepo.findAll();
   }
 
