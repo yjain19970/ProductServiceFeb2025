@@ -2,6 +2,7 @@ package com.scaler.productservice.service;
 
 import com.scaler.productservice.model.Product;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 
 /**
@@ -14,4 +15,5 @@ public interface ProductService {
 
   Product createProduct(String title, String imageURL, String catTitle, String description);
 
+  Page<Product> getPaginatedProducts(int pageNo, int pageSize);
 }

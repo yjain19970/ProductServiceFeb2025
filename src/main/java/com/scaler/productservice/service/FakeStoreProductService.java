@@ -5,6 +5,7 @@ import com.scaler.productservice.model.Category;
 import com.scaler.productservice.model.Product;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -83,6 +84,12 @@ public class FakeStoreProductService implements ProductService {
 
     response = convertFakeStoreResponseToProduct(fakeStoreResponse.getBody());
     return response;
+  }
+
+  @Override
+  public Page<Product> getPaginatedProducts(int pageNo, int pageSize) {
+    // dummy implementation.
+    return null;
   }
 }
 

@@ -4,10 +4,13 @@ import com.scaler.productservice.model.Category;
 import com.scaler.productservice.model.Product;
 import com.scaler.productservice.repository.CategoryRepo;
 import com.scaler.productservice.repository.ProductRepo;
-import com.scaler.productservice.repository.projection.ProductProjection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -45,8 +48,8 @@ public class SelfProductService implements ProductService {
 
   @Override
   public List<Product> getAllProducts() {
-    ProductProjection response = productRepo.getProductNameByTitle("phone samsung");
-    System.out.println("Fetched product : " + response.getDescription() + " " + response.getTitle());
+    //ProductProjection response = productRepo.getProductNameByTitle("phone samsung");
+    //System.out.println("Fetched product : " + response.getDescription() + " " + response.getTitle());
     return productRepo.findAll();
   }
 
@@ -57,7 +60,6 @@ public class SelfProductService implements ProductService {
 
     // Step2:
     Product product = new Product();
-    Category category = new Category();
     product.setImageURL(imageURL);
     product.setTitle(title);
     product.setCreatedAt(new Date());
@@ -65,16 +67,31 @@ public class SelfProductService implements ProductService {
     product.setDescription(description);
 
     // Step3: check if cat exists in the DB
-    Category existingCategory = categoryRepo.findByTitle(catTitle).get();
-    if (existingCategory == null) {
+    Optional<Category> existingCategory = categoryRepo.findByTitle(catTitle);
+    if (existingCategory.isEmpty()) {
+      Category category = new Category();
       category.setTitle(catTitle);
+      product.setCategory(category);
+    } else {
+      product.setCategory(existingCategory.get());
     }
-    // saved category also.
-    product.setCategory(category);
 
     // Finally save to the DB.
     Product response = productRepo.save(product);
     return response;
+  }
+
+  @Override
+  public Page<Product> getPaginatedProducts(int pageNo, int pageSize) {
+    // pageNo:1 & pageSize: 10
+    Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+    String sortBy = "title";
+    Pageable pageableWithSort = PageRequest.of(pageNo, pageSize, Sort.Direction.ASC, sortBy);
+
+    Page<Product> productPage = productRepo.findAll(pageableWithSort);
+
+    return productPage;
   }
 
   private void validateInputRequest(String title, String imageURL, String catTitle, String description) {

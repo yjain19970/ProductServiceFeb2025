@@ -5,7 +5,11 @@ import com.scaler.productservice.exception.ProductNotFoundException;
 import com.scaler.productservice.model.Product;
 import com.scaler.productservice.service.ProductService;
 import java.util.List;
+import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +30,7 @@ public class ProductController {
   }
 
   @GetMapping("/products/{id}")
+  @Cacheable(value = "product", key = "#id")
   public Product getProductById(@PathVariable("id") Integer id) throws ProductNotFoundException {
     if (id == 10000) {
       throw new IllegalArgumentException("Id should not be 10000");
@@ -40,6 +45,7 @@ public class ProductController {
   }
 
   @PostMapping("/products")
+  @CachePut(value = "product", key = "#result.title")
   public Product createProduct(@RequestBody CreateProductRequestDto request) {
     // you can do validations
     if (request.getDescription() == null) {
@@ -52,6 +58,14 @@ public class ProductController {
     return service.createProduct(request.getTitle(), request.getImageURL(), request.getCategory().getTitle(),
         request.getDescription());
   }
+
+  /**
+   * For  below APIs implement caching by own.
+   * @return
+   */
+
+
+
 
   @GetMapping("/products")
   public ResponseEntity<List<Product>> getAllProducts() {
@@ -69,6 +83,13 @@ public class ProductController {
   @DeleteMapping("/products/{id}")
   public void deleteProductById(@PathVariable("id") Integer id) {
 
+  }
+
+  @GetMapping("/products/{pageNo}/{pageSize}")
+  public ResponseEntity<Page<Product>> getPaginatedProducts(@PathVariable("pageNo") int pageNo,
+      @PathVariable("pageSize") int pageSize) {
+    Page<Product> products = service.getPaginatedProducts(pageNo, pageSize);
+    return ResponseEntity.ok(products);
   }
 
   /**
